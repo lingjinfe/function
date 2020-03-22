@@ -104,3 +104,116 @@ function ($link,$data,$table,$where = null){
     }
 }
 //DELETE FROM user WHERE id=
+/**
+ * 删除操作
+ * @param $link
+ * @param $table
+ * @param null $where
+ * @return bool|int
+ */
+function delete($link, $table, $where = null) {
+    $where = $where ? ' WHERE ' . $where : '';
+    $query = "DELETE FROM {$table} {$where}";
+    $res = mysqli_query ( $link, $query );
+    if ($res) {
+        return mysqli_affected_rows ( $link );
+    } else {
+        return false;
+    }
+}
+
+/**
+ * 查询指定记录
+ * @param $link
+ * @param $query
+ * @param int $result_type
+ * @return array|bool|null
+ */
+function fetchOne($link, $query, $result_type = MYSQLI_ASSOC) {
+    $result = mysqli_query ( $link, $query );
+    if ($result && mysqli_num_rows ( $result ) > 0) {
+        $row = mysqli_fetch_array ( $result, $result_type );
+        return $row;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * 查询所有记录
+ * @param $link
+ * @param $query
+ * @param int $result_type
+ * @return array|bool
+ */
+function fetchAll($link, $query, $result_type = MYSQLI_ASSOC) {
+    $result = mysqli_query ( $link, $query );
+    if ($result && mysqli_num_rows ( $result ) > 0) {
+        while ( $row = mysqli_fetch_array ( $result, $result_type ) ) {
+            $rows [] = $row;
+        }
+        return $rows;
+    } else {
+        return false;
+    }
+}
+/**
+ * 得到表中的记录数
+ * @param object $link
+ * @param string $table
+ * @return number|boolean
+ */
+function getTotalRows($link, $table) {
+    $query = "SELECT COUNT(*) AS totalRows FROM {$table}";
+    $result = mysqli_query ( $link, $query );
+    if ($result && mysqli_num_rows ( $result ) == 1) {
+        $row = mysqli_fetch_assoc ( $result );
+        return $row ['totalRows'];
+    } else {
+        return false;
+    }
+}
+
+/**
+ * 得到结果集的记录条数
+ * @param object $link
+ * @param string $query
+ * @return boolean
+ */
+function getResultRows($link, $query) {
+    $result = mysqli_query ( $link, $query );
+    if ($result) {
+        return mysqli_num_rows ( $result );
+    } else {
+        return false;
+    }
+}
+
+
+
+/**
+ * @param object $link
+ */
+function getServerInfo($link) {
+    return mysqli_get_server_info ( $link );
+}
+/**
+ * @param object $link
+ */
+function getClientInfo($link) {
+    return mysqli_get_client_info ( $link );
+}
+
+/**
+ * @param object $link
+ */
+function getHostInfo($link){
+    return mysqli_get_host_info($link);
+}
+
+/**
+ * @param object $link
+ */
+function getProtoInfo($link) {
+    return mysqli_get_proto_info ( $link );
+}
